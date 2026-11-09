@@ -2,7 +2,7 @@
 ## Title: HandyNotes: NPCs (Classic)
 ## Version: @project-version@
 ## Notes: Shows locations of various old world npcs
-## Author: Revel of Pagle
+## Author: Callie
 ## X-Curse-Project-ID: 340222
 ## X-WoWI-ID: 25295
 ## RequiredDeps: HandyNotes

@@ -2,7 +2,7 @@
 ## Title: HandyNotes_NPCs (Classic)
 ## Version: @project-version@
 ## Notes: Shows locations of various npcs
-## Author: Cali
+## Author: Callie
 ## X-Curse-Project-ID: 340222
 ## X-WoWI-ID: 25295
 ## RequiredDeps: HandyNotes
