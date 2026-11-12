@@ -61,7 +61,7 @@ function Addon:OnEnable()
 		if not data["items"][itemID] or not data["items"][itemID].profession then return end
 		--tooltip:AddLine("Checking if learned")
 		for k, v in pairs(self.db.realm) do -- Look through all the alts on realm
-			if v.professions[data["items"][itemID].profession] then -- We have the profession
+			if v.professions[data["items"][itemID].profession] then-- We have the profession
 				--if not lineAdded then tooltip:AddLine('\n') lineAdded = true end
 				if v.learned[itemID] then
 					tooltip:AddLine(L["Already learned by"] .. ": " .. k, 1, 0, 0)
