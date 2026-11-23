@@ -86,7 +86,7 @@ function pluginHandler:OnEnter(uiMapId, coord)
 					local icon = 'Interface\\ICONS\\' .. data["items"][item].icon
 					local itemColor = ITEM_QUALITY_COLORS[data["items"][item].quality]
 					-- TODO Add default icon and color just in case we don't have them
-					tooltip:AddLine("|T".. icon ..":0|t" .. data["items"][item].name, GetCoinTextureString(data["items"][item].buyPrice))
+					tooltip:AddLine("|T".. icon ..":0|t" .. data["items"][item].name, C_CurrencyInfo.GetCoinTextureString(data["items"][item].buyPrice))
 					tooltip:SetCellTextColor(lineNumber, 1, itemColor.r, itemColor.g, itemColor.b)
 					lineNumber = lineNumber + 1
 				end
@@ -427,8 +427,8 @@ local defaults = {
 			hide = false,
 		},
 		button = {
-			x = -40,
-			y = -30,
+			x = -60,
+			y = 6,
 		},
 	},
 	char = {
@@ -776,6 +776,7 @@ function Addon:PLAYER_LOGIN()
  button:SetText("NPCs")
  button:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", db.button.x, db.button.y)
  button:SetFrameStrata("FULLSCREEN_DIALOG")
+ button:SetUserPlaced(false)
  self.button = button
  if db.mapButton then
 	button:Show()
@@ -961,33 +962,31 @@ function Addon:CheckSettings()
 	AltRecipes:Toggle()
 end
 
-local xB = 0
-local yB = 0
-function Addon:DragStart(frame, button) -- Copied from BartrubySummonPet, button seems to jump a little when done moving; FIX ME
- if (button == "LeftButton" and IsShiftKeyDown() and not frame.isMoving) then
-  frame.isMoving = true
-  frame:StartMoving()
-  local _, _, _, x, y = frame:GetPoint()
-  --print('Start', point, x, y)
-  xB = x
-  yB = y
- end
+function Addon:DragStart(frame, button)
+    if (button == "LeftButton" and IsShiftKeyDown() and not frame.isMoving) then
+        frame.isMoving = true
+        frame:StartMoving()
+    end
 end
 
 function Addon:DragStop(frame, button)
- if (frame.isMoving == true) then
-  frame.isMoving = false
+    if (frame.isMoving) then
+        frame.isMoving = false
+        frame:StopMovingOrSizing()
 
-  local _, _, _, x, y = frame:GetPoint()
-  frame:StopMovingOrSizing()
+        -- Calculate the exact offset between the button's TOPRIGHT and WorldMapFrame's TOPRIGHT
+        local frameRight, frameTop = frame:GetRight(), frame:GetTop()
+        local mapRight, mapTop = WorldMapFrame:GetRight(), WorldMapFrame:GetTop()
 
-  local xDelta = x - xB
-  local yDelta = y - yB
-  --print('End', point, x, y, xDelta, yDelta)
+        if frameRight and frameTop and mapRight and mapTop then
+            -- Adjust for scale differences if the button and WorldMapFrame have different scales
+            local scale = frame:GetEffectiveScale() / WorldMapFrame:GetEffectiveScale()
+            
+            db.button.x = (frameRight * scale) - mapRight
+            db.button.y = (frameTop * scale) - mapTop
+        end
 
-  db.button.x = xDelta + db.button.x
-  db.button.y = yDelta + db.button.y
-  self.button:ClearAllPoints()
-  self.button:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", db.button.x, db.button.y)
- end
+        frame:ClearAllPoints()
+        frame:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", db.button.x, db.button.y)
+    end
 end

@@ -37,6 +37,8 @@ local function update(self)
 				if item.buyPrice then
 					frame.rtext:SetText(C_CurrencyInfo.GetCoinTextureString(item.buyPrice))
 				end
+				frame.ctext:SetText('')
+				frame.ctext:SetTextColor(1, 1, 1)
 				frame:SetScript("OnMouseDown", function() Search:FindNeareastNPCs(entry.itemID) end)
 				frame:SetScript("OnEnter", function(self) Search:TooltipShow(self, entry.itemID) end)
 				frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
